@@ -44,10 +44,6 @@ int car_t6;
 
 //---------------------------------------------------------------------- 
 const int baudRate = 115200;               //设置波特率
-const int car1txPin = 17;                  //串口car1发送引脚
-const int car1rxPin = 16;                  //串口car1接收引脚
-const int car2txPin = 23;                  //串口car2发送引脚
-const int car2rxPin = 22;                  //串口car2接收引脚
 const byte DNS_PORT = 53;                  //设置DNS端口号
 const int webPort = 80;                    //设置Web端口号
 const int resetPin = 0;                    //设置重置按键引脚,用于删除WiFi信息
