@@ -12,10 +12,10 @@ HardwareSerial car2(2);  //硬件串口 HardwareSerial 有三个参数(0,1,2)分
 #include <PubSubClient.h>        //另一个MQTT库
 //-----------------------------------------------------------
 //MQTT 代理
-const char *mqtt_broker = "m.lijuan.wang";   //MQTT服务器域名
+const char *mqtt_broker = "*****";   //MQTT服务器域名
 const char *topic = "/2458968/send";            //主题
-const char *mqtt_username = "longcat";       //用户名
-const char *mqtt_password = "juan5201314.."; //密码
+const char *mqtt_username = "*********";       //用户名
+const char *mqtt_password = "*********"; //密码
 const int mqtt_port = 1883;                  //端口号
 WiFiClient espClient;
 PubSubClient client(espClient);
