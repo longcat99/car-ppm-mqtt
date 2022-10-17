@@ -9,17 +9,21 @@
 #include "led.h"
 #include <esp_event.h>
 #include <string.h>
-#include "airkiss.h"
+//#include "airkiss.h"
 #include "iothub.h"
 #include "cJSON.h"
 #include "config.h"
 #include <esp_event.h>
 #include "sdkconfig.h"
 #include "time-1.h"
+#include "wifi_manager.h"
+#include "http_app.h"
+#include "esp_log.h"
+#include "console_app.h"
 
 
-//static const char *TAG = "MAIN";
-
+/*用于 ESP 串行控制台消息的 @brief 标记*/
+static const char TAG[] = "main";
 
 //int wait_time = 0;
 
@@ -27,6 +31,30 @@
 
 
 
+extern const uint8_t web_html_start[] asm("_binary_web_html_start");
+extern const uint8_t web_html_end[] asm("_binary_web_html_end");
+
+static esp_err_t my_get_handler(httpd_req_t *req){
+
+/*在本例中，我们的自定义页面位于 /web*/
+	if(strcmp(req->uri, "/web") == 0){
+
+		//ESP_LOGI(TAG, "服务页面/web");
+
+		//const char* response = "<html><body><h1>Hello World!</h1></body></html>";
+
+		httpd_resp_set_status(req, "200 OK");
+		httpd_resp_set_type(req, "text/html");
+		httpd_resp_send(req, (char*)web_html_start, web_html_end - web_html_start);
+    return ESP_OK;
+	}
+	else{
+/*否则发送 404*/
+		httpd_resp_send_404(req);
+	}
+
+	return ESP_OK;
+}
 
 
 
@@ -181,30 +209,87 @@ static void ppm_rx_task(void *pvParameter)
     vTaskDelete(NULL);
 }
 
-void app_main(void)
-{   ESP_ERROR_CHECK(nvs_flash_init());
-    ESP_ERROR_CHECK(esp_netif_init());
-    ESP_ERROR_CHECK(esp_event_loop_create_default());
-
-    led_init();
-    airkiss_init();
-    //time_init();
-    xTaskCreate(time_init, "time_init", 6144, NULL, 10, NULL);
-    xTaskCreate(ppm_rx_task, "ppm_rx_task", 6144, NULL, 10, NULL);
-    //mqtt
-
-    mqtt_init();
-    
-    while (1) {
+void netookmqtt(void *pvParameter)
+    {
+     
+      mqtt_init();
+      vTaskDelay( pdMS_TO_TICKS(2000) );
+     
+      while (1) {
  
         car_mqtt_send();
     
         vTaskDelay(300 / portTICK_PERIOD_MS);
-        // if(wait_time>0){
-        //    wait_time--;
-        // }
-
+     
     }
+     }
+/**
+*@brief 这是一个回调示例，您可以在自己的应用程序中设置它以获取 wifi 管理器事件的通知。
+*/
+void cb_connection_ok(void *pvParameter){
+	ip_event_got_ip_t* param = (ip_event_got_ip_t*)pvParameter;
+    
+/*将 IP 转换为人类可读的字符串*/
+	char str_ip[16];
+	esp_ip4addr_ntoa(&param->ip_info.ip, str_ip, IP4ADDR_STRLEN_MAX);
+    ESP_LOGI(TAG, "我有一个连接，我的 IP 是%s!", str_ip);
+    //led正常状态-快闪
+    led_set_state(LED_STATE_OK);
+    
+      //time_init();
+    vTaskDelay(3000 / portTICK_PERIOD_MS);
+    xTaskCreate(time_init, "time_init", 4096, NULL, 7, NULL);
+    xTaskCreate(ppm_rx_task, "ppm_rx_task", 6144, NULL, 8, NULL);
+
+    //mqtt
+    vTaskDelay(6000 / portTICK_PERIOD_MS);
+    
+    
+    xTaskCreate(netookmqtt, "netookmqtt",10240, NULL, 9, NULL);
+	
+}
+
+
+void cb_start_ap(void *pvParameter){
+  
+ 
+  ESP_LOGI(TAG, "ap配网地址是10.10.0.1!");
+  led_set_state(LED_STATE_WIFI_AIRKISS);
+}
+
+void monitoring_task(void *pvParameter)
+{
+  
+  for(;;){
+    ESP_LOGI(TAG, "空闲堆：%d",esp_get_free_heap_size());
+    vTaskDelay( pdMS_TO_TICKS(20000) );
+  }
+}
+
+void app_main(void)
+{   ESP_ERROR_CHECK(nvs_flash_init());
+    //ESP_ERROR_CHECK(esp_netif_init());
+    //ESP_ERROR_CHECK(esp_event_loop_create_default());
+   
+    
+    led_init();
+    /*启动 wifi 管理器*/
+	wifi_manager_start();
+    /*注册一个回调作为如何将代码与 wifi 管理器集成的示例*/
+  //获取到sta模式ip后的回调  
+	wifi_manager_set_callback(WM_EVENT_STA_GOT_IP, &cb_connection_ok);
+  //ap状态回调
+  wifi_manager_set_callback(WM_ORDER_START_AP, &cb_start_ap);
+
+/*为 http 服务器设置自定义处理程序
+*现在导航到 /web 以查看自定义页面
+**/
+	http_app_set_handler_hook(HTTP_GET, &my_get_handler);
+    
+   //打印空闲堆
+   // xTaskCreatePinnedToCore(&monitoring_task, "monitoring_task", 2048, NULL, 9, NULL, 1);
+   //控制台     console_task
+   xTaskCreatePinnedToCore(&console_task, "console_task", 4096, NULL, 5, NULL, 1);     
 
 
 }

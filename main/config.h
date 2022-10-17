@@ -13,10 +13,17 @@
 
 
 
+//led引脚
+#define LED_GPIO 16
 
+
+//led任务优先级
 #define TASK_LED_Priority 16
+//任务读取优先级
 #define TASK_READ_Priority 10
+//任务发送优先级
 #define TASK_SEND_Priority 10
+//任务 ping 优先级
 #define TASK_PING_Priority 10
 
 
@@ -48,8 +55,8 @@
 
 #define MQTT_SERVER "mqtt://m.lijuan.wang"
 #define MQTT_PORT  1883
-#define MQTT_UserName  "用户名"
-#define MQTT_Password  "密码"
+#define MQTT_UserName  "longcat"
+#define MQTT_Password  "juan5201314.."
 
 
 #define RC_CHANNEL            0                  /* 接收器的通道输入 (0-7) Channel input (0-7) for receiver */

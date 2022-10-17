@@ -1,11 +1,11 @@
 
-#include "esp_mac.h"
+//#include "esp_mac.h"
 #include "esp_log.h"
 #include "config.h"
 #include "mqtt_client.h"
 #include "iothub.h"
 #include "esp32/rom/crc.h"
-//#include "pwm.h"
+#include "led.h"
 #include "utility.h"
 
 static const char *TAG = "MQTT";
@@ -81,8 +81,11 @@ static esp_err_t mqtt_event_handler_cb(esp_mqtt_event_handle_t event) {
             xEventGroupSetBits(s_mqtt_event_group, B_MQTT_EVENT_CONNECTED);
 
             ESP_LOGI(TAG, "MQTT_EVENT_CONNECTED"); //Mqtt 事件已连接
+            //led正常状态-快闪
+            led_set_state(LED_STATE_OK);
             msg_id = esp_mqtt_client_subscribe(c, topic_read, 0);
             ESP_LOGI(TAG, "发送订阅成功，主题=%s msg_id=%d", topic_read, msg_id);
+
             //msg_id = esp_mqtt_client_subscribe(c, topic_control, 0);
             //ESP_LOGI(TAG, "发送订阅成功，主题=%s msg_id=%d", topic_control, msg_id);
 
@@ -90,6 +93,7 @@ static esp_err_t mqtt_event_handler_cb(esp_mqtt_event_handle_t event) {
         case MQTT_EVENT_DISCONNECTED:
             xEventGroupSetBits(s_mqtt_event_group, B_MQTT_EVENT_DISCONNECTED);
             ESP_LOGI(TAG, "Mqtt事件已断开连接");
+            led_set_state(LED_STATE_CONN_SERVER_ERROR);
             break;
 
         case MQTT_EVENT_SUBSCRIBED:
@@ -114,9 +118,11 @@ static esp_err_t mqtt_event_handler_cb(esp_mqtt_event_handle_t event) {
         case MQTT_EVENT_ERROR:
             xEventGroupSetBits(s_mqtt_event_group, B_MQTT_EVENT_ERROR);
             ESP_LOGI(TAG, "Mqtt事件错误");
+            led_set_state(LED_STATE_CONN_SERVER_ERROR);
             break;
         default:
             ESP_LOGI(TAG, "其他事件id：%d", event->event_id);
+            led_set_state(LED_STATE_CONN_SERVER_ERROR);
             break;
     }
     return ESP_OK;
@@ -145,7 +151,7 @@ int mqtt_app_start(void) {
             .username=MQTT_UserName,
             .password=MQTT_Password,
             .client_id=client_id,
-            .keepalive=60,
+            .keepalive=30,
     };
 
     client = esp_mqtt_client_init(&mqtt_cfg);
@@ -310,11 +316,11 @@ void send_task(void *arg) {
 
             mqtt_send_msg_t *msg = (mqtt_send_msg_t *) ptr;
 
-
-            ESP_LOGI(TAG, "发送主题：%.*s", msg->topic_len, msg->topic);
-
-            ESP_LOGI(TAG, "发送数据：%.*s", msg->data_len, msg->data);
-
+            //*
+            //ESP_LOGI(TAG, "发送主题：%.*s", msg->topic_len, msg->topic);
+            //*
+            //ESP_LOGI(TAG, "发送数据：%.*s", msg->data_len, msg->data);
+            //*
             int msg_id = esp_mqtt_client_publish(client, msg->topic, msg->data, msg->data_len, msg->qos, msg->retain);
             // ESP_LOGI(TAG, "sent publish successful, msg_id=%d", msg_id);
 

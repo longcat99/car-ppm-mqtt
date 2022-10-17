@@ -60,12 +60,13 @@ static void initialize_sntp(void)
     sntp_setoperatingmode(SNTP_OPMODE_POLL);
     // sntp_setservername(0, "pool.ntp.org");
     sntp_setservername(0, "ntp1.aliyun.com");
+    sntp_setservername(1, "pool.NTP.org");
     sntp_set_time_sync_notification_cb(time_sync_notification_cb);
     sntp_init();
 }
 
 
-void time_init(void)
+void time_init(void *pvParameter)
 {
     time_t now;
     struct tm  timeinfo;
@@ -94,7 +95,7 @@ void time_init(void)
         tzset();
         localtime_r(&now, &timeinfo);
         strftime(strftime_buf, sizeof(strftime_buf), "%c", &timeinfo);
-        ESP_LOGI(TAG, "上海的当前日期/时间是：%s", strftime_buf);
+        //ESP_LOGI(TAG, "上海的当前日期/时间是：%s", strftime_buf);
         
         vTaskDelay(1000 / portTICK_PERIOD_MS);
     }

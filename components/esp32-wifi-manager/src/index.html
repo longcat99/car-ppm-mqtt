@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<link rel="stylesheet" href="style.css">
+		<script async src="code.js"></script>
+		<title>esp32-wifi-manager</title>
+	</head>
+	<body>
+		<div id="app">
+			<div id="app-wrap">
+				<div id="wifi">
+					<header>
+						<h1>Wi-Fi</h1>
+					</header>
+					<div class="el-backtop">
+						<div class="btn"></div>
+					  </div>
+				   
+				   
+					<div id="wifi-status">
+						<h2>连接到:</h2>
+						<section id="connected-to">
+							<div class="ape"><div class="w0"><div class="pw"><span></span></div></div></div>
+						</section>
+					</div>
+					<h2>手动连接</h2>
+					<section id="manual_add">
+					<div class="ape">添加（隐藏）SSID<div>
+					</section>
+					<h2>或选择网络...</h2>
+					<section id="wifi-list">
+					</section>
+					<div id="pwrdby"><em>Powered by </em><a id="acredits" href="#"><strong>QQ:313202013</strong></a>.</div>
+				</div>
+				<div id="connect_manual">
+					<header>
+						<h1>输入详细信息</h1>
+					</header>
+					<h2>手动连接</span></h2>
+					<section>
+						<input id="manual_ssid" type="text" placeholder="wifi名字" value="">
+						<input id="manual_pwd" type="password" placeholder="WiFi密码" value="">
+					</section>
+					<div class="buttons">
+							<input id="manual_join" type="button" value="加入" data-connect="manual" />
+							<input id="manual_cancel" type="button" value="取消"/>
+					</div>
+				</div>
+				<div id="connect">
+					<header>
+						<h1>输入密码</h1>
+					</header>
+					<h2>密码 <span id="ssid-pwd"></span></h2>
+					<section>
+						<input id="pwd" type="password" placeholder="Password" value="">
+					</section>
+					<div class="buttons">
+							<input id="join" type="button" value="加入" />
+							<input id="cancel" type="button" value="取消"/>
+					</div>
+				</div>
+				<div id="connect-wait">
+					<header>
+						<h1>请稍等...</h1>
+					</header>
+					<h2>连接到 <span id="ssid-wait"></span></h2>
+					<section>
+						<div id="loading">
+							<div class="spinner"><div class="double-bounce1"></div><div class="double-bounce2"></div></div>
+							<p class="tctr">当 esp32 重新校准其无线电时，您可能会失去 wifi 访问权限。请等到您的设备自动重新连接。这可能需要长达 30 秒.</p>
+						</div>
+						<div id="connect-success">
+							<h3 class="gr">成功！</h3>
+						</div>
+						<div id="connect-fail">
+							<h3 class="rd">连接失败</h3>
+							<p class="tctr">请仔细检查wifi密码（如果有）并确保接入点信号良好。</p>
+						</div>
+					</section>
+					<div class="buttons">
+						<input id="ok-connect" type="button" value="OK" class="ctr" />
+					</div>
+				</div>
+				<div id="connect-details">
+					<div id="connect-details-wrap">
+						<header>
+							<h1></h1>
+						</header>
+						<h2></h2>
+						<section>
+							<div class="buttons">
+								<input id="disconnect" type="button" value="断开" class="ctr"/>
+							</div>
+						</section>
+						<h2>IP地址</h2>
+						<section>
+							<div class="ape brdb">IP地址：<div id="ip" class="fr"></div></div>
+							<div class="ape brdb">子网掩码：<div id="netmask" class="fr"></div></div>
+							<div class="ape">默认网关：<div id="gw" class="fr"></div></div>
+						</section>
+						<div class="buttons">
+							<input id="ok-details" type="button" value="OK" class="ctr" />
+						</div>
+					</div>					
+					<div id="diag-disconnect" class="diag-box">
+						<div class="diag-box-win">
+							<p>您确定要断开与此 wifi 的连接吗？</p>
+							<div class="buttons">
+								<input id="no-disconnect" type="button" value="不" />
+								<input id="yes-disconnect" type="button" value="是的" />
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="credits">
+			<header>
+				<h1>关于这个应用程序...</h1>
+			</header>
+			<h2></h2>
+			<section>
+				<p><strong>ESP32-WIFI管理器</strong>, &copy; 2017-2022, QQ:313202013<br />根据 MIT 许可证获得许可.</p>
+				<p>
+					如果没有以下库，此应用程序将无法实现:
+				</p>
+				<ul>
+					<li>SpinKit, &copy;  2015, Tobias Ahlin. Licensed under the MIT License.</li>
+					<li>jQuery, The jQuery Foundation. Licensed under the MIT License.</li>
+					<li>cJSON, &copy; 2009-2017, Dave Gamble and cJSON contributors. 根据 MIT 许可证获得许可.</li>
+				</ul>
+			</section>
+			<div class="buttons">
+				<input id="ok-credits" type="button" value="好的" class="ctr" />
+			</div>
+		</div>
+		<div class="circle1"></div>
+        <div class="circle2"></div>
+	</body>
+<html>
