@@ -70,9 +70,13 @@
 extern char client_id[64];
 extern char topic_read[64]; //cmd消息
 extern char topic_send[64];
+extern char topic_control[64];
 
 
 //接收消息队列
 // xQueueHandle read_msg_queue = NULL;
 //发送消息队列
 // xQueueHandle send_msg_queue = NULL;
+
+//蓝牙扫描持续时间秒
+#define SCAN_DURATION_SECONDS 20

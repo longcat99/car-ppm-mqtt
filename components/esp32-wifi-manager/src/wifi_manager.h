@@ -151,7 +151,7 @@ extern "C" {
 *值：WIFI_PS_MODEM 用于省电（wifi 调制解调器定期休眠）
 *注意：省电模式仅在 STA 模式下有效
 */
-#define DEFAULT_STA_POWER_SAVE 				WIFI_PS_NONE
+#define DEFAULT_STA_POWER_SAVE 				WIFI_PS_MIN_MODEM
 
 /**
 *@brief 定义访问点的 JSON 表示的最大字节长度。

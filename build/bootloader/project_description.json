@@ -1,0 +1,21 @@
+{
+    "project_name":       "bootloader",
+    "project_path":       "F:/ESP/esp-idfv4.4.2/esp-idf/components/bootloader/subproject",
+    "build_dir":          "C:/Users/Administrator/Desktop/github/car-ppm-mqtt/build/bootloader",
+    "config_file":        "C:/Users/Administrator/Desktop/github/car-ppm-mqtt/sdkconfig",
+    "config_defaults":    "",
+    "app_elf":            "bootloader.elf",
+    "app_bin":            "bootloader.bin",
+    "git_revision":       "v4.4.2-dirty",
+    "target":             "esp32",
+    "rev":                "0",
+    "phy_data_partition": "",
+    "monitor_baud" :      "115200",
+    "monitor_toolprefix": "riscv32-esp-elf-",
+    "config_environment" : {
+        "COMPONENT_KCONFIGS" : "F:/ESP/esp-idfv4.4.2/esp-idf/components/efuse/Kconfig;F:/ESP/esp-idfv4.4.2/esp-idf/components/esp32/Kconfig;F:/ESP/esp-idfv4.4.2/esp-idf/components/esp_common/Kconfig;F:/ESP/esp-idfv4.4.2/esp-idf/components/esp_hw_support/Kconfig;F:/ESP/esp-idfv4.4.2/esp-idf/components/esp_system/Kconfig;F:/ESP/esp-idfv4.4.2/esp-idf/components/freertos/Kconfig;F:/ESP/esp-idfv4.4.2/esp-idf/components/hal/Kconfig;F:/ESP/esp-idfv4.4.2/esp-idf/components/log/Kconfig;F:/ESP/esp-idfv4.4.2/esp-idf/components/newlib/Kconfig;F:/ESP/esp-idfv4.4.2/esp-idf/components/spi_flash/Kconfig",
+        "COMPONENT_KCONFIGS_PROJBUILD" : "F:/ESP/esp-idfv4.4.2/esp-idf/components/bootloader/Kconfig.projbuild;F:/ESP/esp-idfv4.4.2/esp-idf/components/esp_rom/Kconfig.projbuild;F:/ESP/esp-idfv4.4.2/esp-idf/components/esptool_py/Kconfig.projbuild;F:/ESP/esp-idfv4.4.2/esp-idf/components/partition_table/Kconfig.projbuild"
+    },
+    "build_components" : [ "bootloader", "bootloader_support", "efuse", "esp32", "esp_common", "esp_hw_support", "esp_rom", "esp_system", "esptool_py", "freertos", "hal", "log", "main", "micro-ecc", "newlib", "partition_table", "soc", "spi_flash", "xtensa", "" ],
+    "build_component_paths" : [ "F:/ESP/esp-idfv4.4.2/esp-idf/components/bootloader", "F:/ESP/esp-idfv4.4.2/esp-idf/components/bootloader_support", "F:/ESP/esp-idfv4.4.2/esp-idf/components/efuse", "F:/ESP/esp-idfv4.4.2/esp-idf/components/esp32", "F:/ESP/esp-idfv4.4.2/esp-idf/components/esp_common", "F:/ESP/esp-idfv4.4.2/esp-idf/components/esp_hw_support", "F:/ESP/esp-idfv4.4.2/esp-idf/components/esp_rom", "F:/ESP/esp-idfv4.4.2/esp-idf/components/esp_system", "F:/ESP/esp-idfv4.4.2/esp-idf/components/esptool_py", "F:/ESP/esp-idfv4.4.2/esp-idf/components/freertos", "F:/ESP/esp-idfv4.4.2/esp-idf/components/hal", "F:/ESP/esp-idfv4.4.2/esp-idf/components/log", "F:/ESP/esp-idfv4.4.2/esp-idf/components/bootloader/subproject/main", "F:/ESP/esp-idfv4.4.2/esp-idf/components/bootloader/subproject/components/micro-ecc", "F:/ESP/esp-idfv4.4.2/esp-idf/components/newlib", "F:/ESP/esp-idfv4.4.2/esp-idf/components/partition_table", "F:/ESP/esp-idfv4.4.2/esp-idf/components/soc", "F:/ESP/esp-idfv4.4.2/esp-idf/components/spi_flash", "F:/ESP/esp-idfv4.4.2/esp-idf/components/xtensa", "" ]
+}

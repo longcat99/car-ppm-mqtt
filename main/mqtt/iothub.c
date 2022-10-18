@@ -22,7 +22,7 @@ const int B_MQTT_EVENT_ERROR = BIT6;      //错误
 char client_id[64];
 char topic_read[64]; //cmd消息
 char topic_send[64];
-//char topic_control[64];//手柄消息
+char topic_control[64];//ps4手柄消息
 //接收消息队列
 xQueueHandle read_msg_queue = NULL;
 //发送消息队列
@@ -80,7 +80,7 @@ static esp_err_t mqtt_event_handler_cb(esp_mqtt_event_handle_t event) {
 
             xEventGroupSetBits(s_mqtt_event_group, B_MQTT_EVENT_CONNECTED);
 
-            ESP_LOGI(TAG, "MQTT_EVENT_CONNECTED"); //Mqtt 事件已连接
+            ESP_LOGI(TAG, "Mqtt 事件已连接"); //Mqtt 事件已连接
             //led正常状态-快闪
             led_set_state(LED_STATE_OK);
             msg_id = esp_mqtt_client_subscribe(c, topic_read, 0);
@@ -143,7 +143,7 @@ int mqtt_app_start(void) {
     sprintf(client_id, "ESP32_%d", chipId);
     sprintf(topic_send, "/%d/send", chipId); //pub
     sprintf(topic_read, "/%d/read", chipId);//sub
-    // sprintf(topic_control, "/%d/control", chipId);//控制
+    sprintf(topic_control, "/%d/control", chipId);//PS4控制
 
     esp_mqtt_client_config_t mqtt_cfg = {
             .uri = MQTT_SERVER,
@@ -270,7 +270,7 @@ void send_msg_queue_add(mqtt_send_msg_t *smsg) {
 
 
     if (xQueueSend(send_msg_queue, &addr, 50 / portTICK_PERIOD_MS) != pdTRUE) {
-        ESP_LOGE(TAG, "xQueueSend error");
+        ESP_LOGE(TAG, "xQueueSend 错误");
         free(msg.data);
         free(msg.topic);
         free(p);

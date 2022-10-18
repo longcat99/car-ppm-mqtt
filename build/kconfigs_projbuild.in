@@ -1,0 +1,6 @@
+source "F:/ESP/esp-idfv4.4.2/esp-idf/components/app_update/Kconfig.projbuild"
+source "F:/ESP/esp-idfv4.4.2/esp-idf/components/bootloader/Kconfig.projbuild"
+source "F:/ESP/esp-idfv4.4.2/esp-idf/components/esp_rom/Kconfig.projbuild"
+source "F:/ESP/esp-idfv4.4.2/esp-idf/components/esptool_py/Kconfig.projbuild"
+source "F:/ESP/esp-idfv4.4.2/esp-idf/components/partition_table/Kconfig.projbuild"
+source "C:/Users/Administrator/Desktop/github/car-ppm-mqtt/main/Kconfig.projbuild"

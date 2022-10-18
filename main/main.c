@@ -20,10 +20,12 @@
 #include "http_app.h"
 #include "esp_log.h"
 #include "console_app.h"
+#include "ps4.h"
+
 
 
 /*用于 ESP 串行控制台消息的 @brief 标记*/
-static const char TAG[] = "main";
+static const char TAG[] = "MAIN";
 
 //int wait_time = 0;
 
@@ -246,6 +248,8 @@ void cb_connection_ok(void *pvParameter){
     
     
     xTaskCreate(netookmqtt, "netookmqtt",10240, NULL, 9, NULL);
+    xTaskCreate(ps4_start_task, "ps4_start_task",10240, NULL, 9, NULL);
+    
 	
 }
 
@@ -267,7 +271,14 @@ void monitoring_task(void *pvParameter)
 }
 
 void app_main(void)
-{   ESP_ERROR_CHECK(nvs_flash_init());
+{   
+  ESP_LOGI(TAG, "[APP] 启动..");
+  ESP_LOGI(TAG, "[APP] 空闲内存：%d bytes", esp_get_free_heap_size());
+  ESP_LOGI(TAG, "[APP] IDF版本：%s", esp_get_idf_version());
+
+
+  
+  //ESP_ERROR_CHECK(nvs_flash_init());
     //ESP_ERROR_CHECK(esp_netif_init());
     //ESP_ERROR_CHECK(esp_event_loop_create_default());
    

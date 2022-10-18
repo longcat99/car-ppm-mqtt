@@ -13,6 +13,8 @@ idf_component_register(SRCS
         "utility/utility.c"
         "rc/rc.c"
         "time/time-1.c"
+        "ps4/esp_hid_gap.c"
+        "ps4/ps4.c"
 
         
 
@@ -23,4 +25,5 @@ idf_component_register(SRCS
         INCLUDE_DIRS "utility"
         INCLUDE_DIRS "rc"
         INCLUDE_DIRS "time"
+        INCLUDE_DIRS "ps4"
         )

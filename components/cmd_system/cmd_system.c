@@ -78,7 +78,7 @@ static int get_version(int argc, char **argv)
            info.features & CHIP_FEATURE_BT ? "/BT" : "",
            info.features & CHIP_FEATURE_EMB_FLASH ? "/Embedded-Flash:" : "/External-Flash:",
            spi_flash_get_chip_size() / (1024 * 1024), " MB");
-    printf("\ 修订号：%d\r\n", info.revision);
+    printf(" 修订号：%d\r\n", info.revision);
     return 0;
 }
 
