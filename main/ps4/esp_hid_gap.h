@@ -50,6 +50,8 @@
 extern "C" {
 #endif
 
+
+//扫描结果结构体
 typedef struct esp_hidh_scan_result_s {
     struct esp_hidh_scan_result_s *next;
 

@@ -300,7 +300,7 @@ void app_main(void)
    //打印空闲堆
    // xTaskCreatePinnedToCore(&monitoring_task, "monitoring_task", 2048, NULL, 9, NULL, 1);
    //控制台     console_task
-   xTaskCreatePinnedToCore(&console_task, "console_task", 4096, NULL, 5, NULL, 1);     
+   // xTaskCreatePinnedToCore(&console_task, "console_task", 4096, NULL, 5, NULL, 1);     
 
 
 }

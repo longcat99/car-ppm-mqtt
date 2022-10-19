@@ -42,7 +42,6 @@ function to process requests, decode URLs, serve files, etc. etc.
 #include <esp_system.h>
 #include "esp_netif.h"
 #include <esp_http_server.h>
-#include <sys/param.h>
 
 #include "wifi_manager.h"
 #include "http_app.h"
@@ -50,9 +49,6 @@ function to process requests, decode URLs, serve files, etc. etc.
 
 /* @brief tag used for ESP serial console messages */
 static const char TAG[] = "http_server";
-
-char mqttserver[30]={0};
-char mqtt_password[30]={0};
 
 /* @brief the HTTP server handle */
 static httpd_handle_t httpd_handle = NULL;
@@ -118,70 +114,6 @@ esp_err_t http_app_set_handler_hook( httpd_method_t method,  esp_err_t (*handler
 
 }
 
-/*  /web POST 处理程序*/
-static esp_err_t echo_post_handler(httpd_req_t *req)
-{
-    char buf[100];
-    // char ssid[10];
-    // char pswd[10];
-    int ret, remaining = req->content_len;
-
-    while (remaining > 0) {
-/*读取请求的数据*/
-        if ((ret = httpd_req_recv(req, buf,
-                        MIN(remaining, sizeof(buf)))) <= 0) {
-            if (ret == HTTPD_SOCK_ERR_TIMEOUT) {
-/*如果超时重试接收*/
-                continue;
-            }
-            return ESP_FAIL;
-        }
-
-/*发回相同的数据*/
-        httpd_resp_send_chunk(req, buf, ret);
-        remaining -= ret;
-
-        esp_err_t e = httpd_query_key_value(buf,"mqttserver",mqttserver,sizeof(mqttserver));
-        if(e == ESP_OK) {
-            printf("mqttserver = %s\r\n",mqttserver);
-        }
-        else {
-            printf("error = %d\r\n",e);
-        }
-
-        e = httpd_query_key_value(buf,"password",mqtt_password,sizeof(mqtt_password));
-        if(e == ESP_OK) {
-            printf("pswd = %s\r\n",mqtt_password);
-        }
-        else {
-            printf("error = %d\r\n",e);
-        }
-/*接收到的日志数据*/
-        ESP_LOGI(TAG, "=========== 收到的数据 ==========");
-        ESP_LOGI(TAG, "%.*s", ret, buf);
-        ESP_LOGI(TAG, "====================================");
-    }
-
-    //结束响应
-    httpd_resp_send_chunk(req, NULL, 0);
-    if(strcmp(mqttserver ,"\0")!=0 && strcmp(mqtt_password,"\0")!=0)
-    {
-        //xSemaphoreGive(ap_sem);
-        ESP_LOGI(TAG, "设置wifi名称和密码成功！转站模式");
-    }
-    return ESP_OK;
-}
-
-
-static const httpd_uri_t echo = {
-    .uri       = "/web",
-    .method    = HTTP_POST,
-    .handler   = echo_post_handler,
-    .user_ctx  = NULL
-};
-
-
-
 //Http 服务器删除处理程序
 static esp_err_t http_server_delete_handler(httpd_req_t *req){
 
@@ -216,13 +148,13 @@ static esp_err_t http_server_post_handler(httpd_req_t *req){
 
 	/* POST /connect.json */
 	if(strcmp(req->uri, http_connect_url) == 0){
-        
 
-         /*头部缓冲区*/
+
+		/* buffers for the headers */
 		size_t ssid_len = 0, password_len = 0;
 		char *ssid = NULL, *password = NULL;
 
-        /*提供的值的 len*/
+		/* len of values provided */
 		ssid_len = httpd_req_get_hdr_value_len(req, "X-Custom-ssid");
 		password_len = httpd_req_get_hdr_value_len(req, "X-Custom-pwd");
 
@@ -404,7 +336,7 @@ static esp_err_t http_server_get_handler(httpd_req_t *req){
 
 }
 
-/*任何 GET 请求的 URI 通配符*/
+/* URI wild card for any GET request */
 static const httpd_uri_t http_server_get_request = {
     .uri       = "*",
     .method    = HTTP_GET,
@@ -412,7 +344,7 @@ static const httpd_uri_t http_server_get_request = {
 };
 
 static const httpd_uri_t http_server_post_request = {
-	.uri	= "/",
+	.uri	= "*",
 	.method = HTTP_POST,
 	.handler = http_server_post_handler
 };
@@ -538,11 +470,10 @@ void http_app_start(bool lru_purge_enable){
 		err = httpd_start(&httpd_handle, &config);
 
 	    if (err == ESP_OK) {
-	        ESP_LOGI(TAG, "注册 URI 处理程序");
+	        ESP_LOGI(TAG, "Registering URI handlers");
 	        httpd_register_uri_handler(httpd_handle, &http_server_get_request);
 	        httpd_register_uri_handler(httpd_handle, &http_server_post_request);
 	        httpd_register_uri_handler(httpd_handle, &http_server_delete_request);
-			httpd_register_uri_handler(httpd_handle, &echo);
 	    }
 	}
 

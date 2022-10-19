@@ -39,16 +39,19 @@
 static const char *TAG = "PS4";
 
 //0x 80 80 80 80 08 00 xx 00 00  ps4初始数据
+//80 80 80 80 00 00 00 00 00 00
 //左摇杆第0和1位，右摇杆第2和3位，上下左右，方块，三角，圆，叉第4位，前端左右四键第5位
 static int psdata0=128;
 static int psdata1=128;
 static int psdata2=128;
 static int psdata3=128;
-static int psdata4=8;
+static int psdata4=0;
 static int psdata5=0;
+static int psdata6=0;
+static int psdata7=0;
+static int psdata8=0;
+static int psdata9=0;
 
-char xstring[3] = {0};
-char ystring[3] = {0};
 
 
 //------------------------------------------------------
@@ -132,11 +135,23 @@ void ps4_mqtt_send() {
    //cJSON *car_info = cJSON_CreateObject();
 
 
-   cJSON *x = cJSON_CreateString(xstring);
-   cJSON_AddItemToObject(root, "x", x);
+   cJSON *lx = cJSON_CreateNumber(psdata0);
+   cJSON_AddItemToObject(root, "Lx", lx);
 
-   cJSON *y = cJSON_CreateString(ystring);
-   cJSON_AddItemToObject(root, "y", y);
+   cJSON *ly = cJSON_CreateNumber(psdata1);
+   cJSON_AddItemToObject(root, "Ly", ly);
+
+   cJSON *rx = cJSON_CreateNumber(psdata2);
+   cJSON_AddItemToObject(root, "Rx", rx);
+
+   cJSON *ry = cJSON_CreateNumber(psdata3);
+   cJSON_AddItemToObject(root, "Ry", ry);
+
+   cJSON *l2 = cJSON_CreateNumber(psdata4);
+   cJSON_AddItemToObject(root, "l2", l2);
+
+   cJSON *r2 = cJSON_CreateNumber(psdata5);
+   cJSON_AddItemToObject(root, "r2", r2);
 
   /* cJSON *start = cJSON_CreateNumber(t3);
    cJSON_AddItemToObject(root, "start", car_t3);
@@ -217,7 +232,15 @@ void hidh_callback(void *handler_args, esp_event_base_t base, int32_t id, void *
         //ESP_LOGI(TAG, ESP_BD_ADDR_STR " INPUT: %8s, MAP: %2u, ID: %3u, Len: %d, Data:", ESP_BD_ADDR_HEX(bda), esp_hid_usage_str(param->input.usage), param->input.map_index, param->input.report_id, param->input.length);
         ESP_LOG_BUFFER_HEX(TAG, param->input.data, param->input.length);
 
-        printf("DATA=%d\r\n",param->input.data[0]);
+        printf("DATA0=%d\r\n",param->input.data[0]);
+        printf("DATA1=%d\r\n",param->input.data[1]);
+        printf("DATA2=%d\r\n",param->input.data[2]);
+        printf("DATA3=%d\r\n",param->input.data[3]);
+        printf("DATA4=%d\r\n",param->input.data[4]);
+        printf("DATA5=%d\r\n",param->input.data[5]);
+        printf("DATA6=%d\r\n",param->input.data[6]);
+        printf("DATA7=%d\r\n",param->input.data[7]);
+        printf("DATA8=%d\r\n",param->input.data[8]);
         // printf("recivie-->>>\n");
         // strcpy(mqtt_msg, mystrncpy(param->input.data,param->input.length));
         // printf("mqtt_msg-->>>%s \n",mqtt_msg);
@@ -225,18 +248,17 @@ void hidh_callback(void *handler_args, esp_event_base_t base, int32_t id, void *
         // esp_mqtt_client_publish(client, "/car_89860000000000000000", "start", 0, 1, 0);
         //数据有变化才进行mqtt数据上报。
         if(param->input.data[0]!=psdata0||param->input.data[1]!=psdata1||param->input.data[2]!=psdata2||param->input.data[3]!=psdata3||param->input.data[4]!=psdata4||param->input.data[5]!=psdata5){
-            if(param->input.data[1]!=psdata1||param->input.data[2]!=psdata2){
-                itoa(param->input.data[1],ystring,10);
-                itoa(param->input.data[2],xstring,10);
-                ps4_mqtt_send();
-
-            }
+        
             psdata0=param->input.data[0];
             psdata1=param->input.data[1];
             psdata2=param->input.data[2];
             psdata3=param->input.data[3];
             psdata4=param->input.data[4];
             psdata5=param->input.data[5];
+            psdata6=param->input.data[6];
+            psdata7=param->input.data[7];
+            psdata8=param->input.data[8];
+            ps4_mqtt_send();
             if(psdata4==136){
                 //esp_mqtt_client_publish(client, "/car_89860000000000000000", "start", 0, 1, 0);//将89860000000000000000改为你的物联网卡ICCID，保持和小车端一致
                 return;

@@ -219,7 +219,7 @@ static void add_ble_scan_result(esp_bd_addr_t bda, esp_ble_addr_type_t addr_type
         char *name_s = (char *)malloc(name_len + 1);
         if (name_s == NULL) {
             free(r);
-            ESP_LOGE(TAG, "Malloc result name failed!");
+            ESP_LOGE(TAG, "malloc 结果名称失败！");
             return;
         }
         memcpy(name_s, name, name_len);
